@@ -62,22 +62,22 @@ function finesearch {
   echo $lower._$upper
 }
 
-
-accuracyf=0
-old=-1
-while (($(echo "$old<$accuracyf" | bc -l)))
-do
-  echo "Performing finesearch between" $lower "and" $upper
-  range=$(finesearch $lower $upper 10)
-  lower=${range%._*}
-  upper=${range#*._}
-  param1=$(echo "($lower+$upper)/2" | bc -l)
-  output=$(.././svm-train -t 0 -c $param1 -v 10 -q svm_dataset/spam_train_std.txt)
-  tmp=${output#*= }
-  old=$accuracyf
-  accuracyf=${tmp%\%*}
-done
-
+echo "Performing finesearch between" $lower "and" $upper
+range=$(finesearch $lower $upper 10)
+lower=${range%._*}
+upper=${range#*._}
+echo performing finesearch between $lower and $upper
+range=$(finesearch $lower $upper 10)
+lower=${range%._*}
+upper=${range#*._}
+echo "Performing finesearch between" $lower "and" $upper
+range=$(finesearch $lower $upper 10)
+lower=${range%._*}
+upper=${range#*._}
+param1=$(echo "($lower+$upper)/2" | bc -l)
+output=$(.././svm-train -t 0 -c $param1 -v 10 -q svm_dataset/spam_train_std.txt)
+tmp=${output#*= }
+accuracy=${tmp%\%*}
 echo "Tuned C value for linear kernel:" $param1 "Related accuracy: " $accuracy "%"
 
 printf -v res %20s
